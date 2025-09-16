@@ -22,22 +22,7 @@ function start:load()
 
     self.textWall = {}
     self.textWall.text = {
-        "Creative Producer : JIM BROWN",
-        "Executive Producer : DAN BLACK",
-        "Directed By : LOKH DAWN",
-        "Apprentice Programmer : ERIC SON",
-        "Property Master : HORST GRANDT",
-        "Special FX : LAWD SPEAKS 'A 'LOT",
-        "Lead Artist : MARIA SUNG",
-        "Cinematic Designer : LUCAS HART",
-        "Sound Engineer : TONY REEVES",
-        "Composer : ELENA FROST",
-        "Voice Acting : CAST OF THOUSANDS",
-        "QA Lead : ANITA ROLL",
-        "Testers : YOU, THE PLAYER",
-        "Special Thanks : COFFEE",
-        "Special Thanks : CATS OF THE INTERNET",
-        "Made With Love2D <3",
+        "text"
     }
 
     -- Credits scrolling setup
@@ -76,7 +61,7 @@ function start:update(dt)
         self.textWall.scrollY = self.textWall.scrollY - self.textWall.speed * dt
     end
 
-
+end
 
 function start:draw()
     -- Draw scrolling text credits BEHIND gameover screen

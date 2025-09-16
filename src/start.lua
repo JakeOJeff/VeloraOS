@@ -1,13 +1,11 @@
-local END = {}
-local gameoverimg = lg.newImage("assets/screens/gameover.png")
-local pauseImg = lg.newImage("assets/screens/pause.png")
-local theme = la.newSource("assets/audio/bg-theme.mp3", "stream")
-local theme_rev = la.newSource("assets/audio/bg-theme-rev.mp3", "stream")
+local start = {}
+local osInfoImg = lg.newImage("assets/start.png")
 
-function END:load()
+
+function start:load()
     self.timer = 0
     self.screen = {}
-    self.screen.img = gameoverimg
+    self.screen.img = osInfoImg
 
     self.screen.width = self.screen.img:getWidth()
     self.screen.height = self.screen.img:getHeight()
@@ -47,11 +45,6 @@ function END:load()
     self.textWall.speed = 75 * scale       -- pixels per second
     self.textWall.started = false
 
-    self.pauseImg = pauseImg
-    self.pauseEnabled = false
-
-    self.theme = theme
-    self.theme_rev = theme_rev
 
     self.timerManager:after(1, function()
         self.screen.tween.started = true
@@ -65,7 +58,7 @@ function END:load()
     self.theme:play()
 end
 
-function END:update(dt)
+function start:update(dt)
     self.timerManager:update(dt)
 
     if self.screen.tween.started then
@@ -83,12 +76,9 @@ function END:update(dt)
         self.textWall.scrollY = self.textWall.scrollY - self.textWall.speed * dt
     end
 
-    if self.pauseEnabled and self.textWall.scrollY > wH + 100 * scale then
-        END.setScene("TRANSITION")
-    end
-end
 
-function END:draw()
+
+function start:draw()
     -- Draw scrolling text credits BEHIND gameover screen
     lg.setScissor(0, self.screen.y + self.screen.height + 50 * scale, wW, wH - self.screen.y * scale)
     if self.textWall.started then
@@ -119,4 +109,4 @@ function END:draw()
 
 end
 
-return END
+return start

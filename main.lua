@@ -20,6 +20,15 @@ wH = love.graphics.getHeight()
 scale = math.max(wW / baseWidth, wH / baseHeight)
 
 
+-- fonts 
+
+fontStyH = love.graphics.newFont("assets/fonts/fredrick-the-great.ttf", 75 )
+fontStyM = love.graphics.newFont("assets/fonts/fredrick-the-great.ttf", 40 )
+fontStyS = love.graphics.newFont("assets/fonts/fredrick-the-great.ttf", 25 )
+
+fontBaH = love.graphics.newFont("assets/fonts/Barlow-Regular.ttf", 75)
+fontBaM = love.graphics.newFont("assets/fonts/Barlow-Regular.ttf", 40)
+fontBaS = love.graphics.newFont("assets/fonts/Barlow-Regular.ttf", 25)
 
 -- Scenery System
 

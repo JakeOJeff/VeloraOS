@@ -86,11 +86,6 @@ function start:draw()
         self.screen.height / self.screen.img:getHeight()
     )
 
-    if self.pauseEnabled then
-        lg.setColor(41 / 255, 30 / 255, 22 / 255, 0.7)
-        lg.rectangle("fill", 0, 0, wW, wH)
-        lg.draw(self.pauseImg, wW / 2 - self.pauseImg:getWidth() / 2, wH / 2 - self.pauseImg:getHeight() / 2)
-    end
 
 end
 

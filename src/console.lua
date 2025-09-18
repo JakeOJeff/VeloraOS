@@ -92,7 +92,7 @@ function console:execute()
             console:print(tostring(result))
         end
 
-    elseif type(buildCommand) == "table" and buildCommand.__exec and not buildCommand == commands  then
+    elseif type(buildCommand) == "table" and buildCommand.__exec then
         buildCommand.__exec(args)
     end
 

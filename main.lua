@@ -3,6 +3,10 @@ local SceneryInit = require("src.libs.scenery")
 -- Incorporating Libraries
 tween = require 'src.libs.tween'
 
+
+-- Classes
+Timer = require 'src.classes.Timer'
+
 -- Setting global modules
 lg = love.graphics
 lk = love.keyboard

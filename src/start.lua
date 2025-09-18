@@ -35,12 +35,10 @@ function start:load()
         self.screen.tween.started = true
     end)
     self.timerManager:after(25, function ()
-        self.theme:stop()
-        self.theme_rev:play()
+
         self.pauseEnabled = true
         self.textWall.speed = -150 * scale
     end)
-    self.theme:play()
 end
 
 function start:update(dt)
@@ -67,7 +65,6 @@ function start:draw()
     -- Draw scrolling text credits BEHIND gameover screen
     lg.setScissor(0, self.screen.y + self.screen.height + 50 * scale, wW, wH - self.screen.y * scale)
     if self.textWall.started then
-        lg.setFont(fontM) -- medium font for readability
         for i, line in ipairs(self.textWall.text) do
             local textY = self.textWall.scrollY + (i * 40)
             lg.printf(line, 0, textY, wW, "center")
@@ -76,7 +73,6 @@ function start:draw()
     lg.setScissor()
 
     -- Draw gameover screen
-    lg.setFont(fontHH)
     lg.draw(
         self.screen.img,
         self.screen.x,

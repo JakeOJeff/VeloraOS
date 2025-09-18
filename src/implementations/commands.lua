@@ -27,6 +27,9 @@ commands["set"] = {
     end
 }
 
+commands["echo"]= {
+
+}
 
 
 return commands

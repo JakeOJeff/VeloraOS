@@ -5,22 +5,50 @@ function console:load()
     self.lines = {{
         content = {}
     }}
-
+    self.cursorPos = 0 -- cursor position inside the line (0 = before first char)
+    self.blinkTimer = 0
+    self.cursorVisible = true
+    self:print("Use 'get help' to get started! ")
 end
 
 function console:update(dt)
-
+    self.blinkTimer = self.blinkTimer + dt
+    if self.blinkTimer >= 0.5 then
+        self.cursorVisible = not self.cursorVisible
+        self.blinkTimer = 0
+    end
 end
 
 function console:textinput(t)
-
-    table.insert(self.lines[self.currentLine].content, t)
-
+    local line = self.lines[self.currentLine].content
+    table.insert(line, self.cursorPos + 1, t) -- insert at cursor
+    self.cursorPos = self.cursorPos + 1
 end
 
 function console:keypressed(key)
+    local line = self.lines[self.currentLine].content
+
     if key == "backspace" then
-        table.remove(self.lines[self.currentLine].content)
+        if self.cursorPos > 0 then
+            table.remove(line, self.cursorPos)
+            self.cursorPos = self.cursorPos - 1
+        end
+
+    elseif key == "delete" then
+        if self.cursorPos < #line then
+            table.remove(line, self.cursorPos + 1)
+        end
+
+    elseif key == "left" then
+        if self.cursorPos > 0 then
+            self.cursorPos = self.cursorPos - 1
+        end
+
+    elseif key == "right" then
+        if self.cursorPos < #line then
+            self.cursorPos = self.cursorPos + 1
+        end
+
     elseif key == "return" then
         self:execute()
     end
@@ -29,9 +57,18 @@ end
 function console:draw()
     lg.setFont(fontBaS)
     for i = 1, #self.lines do
-        love.graphics.print(i .. ". " .. table.concat(self.lines[i].content), 10, 10 + (i * fontBaS:getHeight() + 5))
-    end
+        local lineStr = table.concat(self.lines[i].content)
+        local y = 10 + (i * fontBaS:getHeight() + 5)
 
+        love.graphics.print(i .. ". " .. lineStr, 10, y)
+
+        -- Draw cursor on the current line
+        if i == self.currentLine and self.cursorVisible then
+            local beforeCursor = table.concat(self.lines[i].content, "", 1, self.cursorPos)
+            local cursorX = 10 + fontBaS:getWidth(i .. ". " .. beforeCursor)
+            love.graphics.print("_", cursorX, y )
+        end
+    end
 end
 
 function console:execute()
@@ -48,6 +85,7 @@ function console:execute()
 
     self.currentLine = self.currentLine + 1
     table.insert(self.lines, {content = {}})
+    self.cursorPos = 0
 end
 
 function console:splitContent(str)
@@ -60,13 +98,13 @@ end
 
 function console:print(str)
     local contentStr = {'>', '>'} -- prefix characters
-
     for i = 1, #str do
-        local ch = string.sub(str, i, i) -- get character at position i
+        local ch = string.sub(str, i, i)
         table.insert(contentStr, ch)
     end
     self.currentLine = self.currentLine + 1
     table.insert(self.lines, {content = contentStr})
+    self.cursorPos = #contentStr
 end
 
 return console

@@ -34,5 +34,18 @@ commands["echo"]= {
     end
 }
 
+commands["clear"] = function()
+    console.currentLine = 0
+    console.lines = {}
+    console.cursorPos = 0
+end
+
+commands["quit"] = function()
+    love.event.quit()
+end
+
+commands["refresh"] = function()
+    love.event.quit("restart")
+end
 
 return commands

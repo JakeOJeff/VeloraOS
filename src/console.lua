@@ -5,10 +5,9 @@ function console:load()
     self.lines = {{
         content = {}
     }}
-    self.cursorPos = 0 -- cursor position inside the line (0 = before first char)
+    self.cursorPos = 0
     self.blinkTimer = 0
     self.cursorVisible = true
-    self:print("Use 'get help' to get started! ")
 end
 
 function console:update(dt)
@@ -93,10 +92,8 @@ function console:execute()
             console:print(tostring(result))
         end
 
-    elseif type(buildCommand) == "table" and buildCommand.__exec then
+    elseif type(buildCommand) == "table" and buildCommand.__exec and not buildCommand == commands  then
         buildCommand.__exec(args)
-    else
-        console:print("Unknown command")
     end
 
     -- Prepare next line

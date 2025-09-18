@@ -28,7 +28,10 @@ commands["set"] = {
 }
 
 commands["echo"]= {
-
+    __exec = function(args)
+        local output = table.concat(args, " ")
+        console:print(output)
+    end
 }
 
 

@@ -74,19 +74,37 @@ end
 function console:execute()
     local words = self:splitContent(table.concat(self.lines[self.currentLine].content))
     local buildCommand = commands
+    local args = {}
     local index = 1
-    while #words ~= 0 do
+
+    while words[index] and buildCommand[words[index]] do
         buildCommand = buildCommand[words[index]]
-        table.remove(words, 1)
-    end
-    if buildCommand and buildCommand ~= commands then
-        print(buildCommand())
+        index = index + 1
     end
 
+    -- Collect leftover words as args
+    for i = index, #words do
+        table.insert(args, words[i])
+    end
+
+    if type(buildCommand) == "function" then
+        local result = buildCommand()
+        if result then
+            console:print(tostring(result))
+        end
+
+    elseif type(buildCommand) == "table" and buildCommand.__exec then
+        buildCommand.__exec(args)
+    else
+        console:print("Unknown command")
+    end
+
+    -- Prepare next line
     self.currentLine = self.currentLine + 1
     table.insert(self.lines, {content = {}})
     self.cursorPos = 0
 end
+
 
 function console:splitContent(str)
     local splitWords = {}

@@ -7,6 +7,10 @@ tween = require 'src.libs.tween'
 -- Classes
 Timer = require 'src.classes.Timer'
 
+
+-- commands
+commands = require "src.implementations.commands"
+
 -- Setting global modules
 lg = love.graphics
 lk = love.keyboard

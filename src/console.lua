@@ -1,5 +1,4 @@
 local console = {}
-local commands = require "src.implementations.commands"
 
 function console:load()
     self.currentLine = 1
@@ -21,7 +20,7 @@ end
 
 function console:keypressed(key)
     if key == "backspace" then
-        self.lines[self.currentLine].content = table.remove(self.lines[self.currentLine].content, 1)
+        table.remove(self.lines[self.currentLine].content)
     elseif key == "return" then
         self:execute()
     end
@@ -43,9 +42,12 @@ function console:execute()
         buildCommand = buildCommand[words[index]]
         table.remove(words, 1)
     end
-    if buildCommand then
+    if buildCommand and buildCommand ~= commands then
         print(buildCommand())
     end
+
+    self.currentLine = self.currentLine + 1
+    table.insert(self.lines, {content = {}})
 end
 
 function console:splitContent(str)
@@ -54,6 +56,17 @@ function console:splitContent(str)
         table.insert(splitWords, word)
     end
     return splitWords
+end
+
+function console:print(str)
+    local contentStr = {'>', '>'} -- prefix characters
+
+    for i = 1, #str do
+        local ch = string.sub(str, i, i) -- get character at position i
+        table.insert(contentStr, ch)
+    end
+    self.currentLine = self.currentLine + 1
+    table.insert(self.lines, {content = contentStr})
 end
 
 return console

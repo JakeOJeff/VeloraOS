@@ -21,7 +21,7 @@ end
 
 function console:keypressed(key)
     if key == "backspace" then
-        self.lines[self.currentLine].content = string.sub(self.lines[self.currentLine].content, 1, -2)
+        self.lines[self.currentLine].content = table.remove(self.lines[self.currentLine].content, 1)
     elseif key == "return" then
         self:execute()
     end

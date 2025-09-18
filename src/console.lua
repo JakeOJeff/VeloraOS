@@ -55,17 +55,39 @@ end
 
 function console:draw()
     lg.setFont(fontBaS)
+
     for i = 1, #self.lines do
-        local lineStr = table.concat(self.lines[i].content)
+        local lineStr = self.lines[i].content
         local y = 10 + (i * fontBaS:getHeight() + 5)
 
-        love.graphics.print(i .. ". " .. lineStr, 10, y)
+        -- draw line number prefix
+        love.graphics.setColor(1, 1, 1) -- white
+        local prefix = i .. ". "
+        love.graphics.print(prefix, 10, y)
+        local x = 10 + fontBaS:getWidth(prefix)
 
-        -- Draw cursor on the current line
+        -- split content into words
+        local words = self:splitContent(table.concat(lineStr))
+
+        for wi, word in ipairs(words) do
+            if self:isCommand(word) then
+                love.graphics.setColor(0.3, 0.8, 1) -- cyan for recognized commands
+            else
+                love.graphics.setColor(1, 1, 1) -- normal white text
+            end
+
+            love.graphics.print(word, x, y)
+            x = x + fontBaS:getWidth(word .. " ")
+        end
+
+        -- reset color
+        love.graphics.setColor(1, 1, 1)
+
+        -- Draw cursor (only for current line)
         if i == self.currentLine and self.cursorVisible then
-            local beforeCursor = table.concat(self.lines[i].content, "", 1, self.cursorPos)
-            local cursorX = 10 + fontBaS:getWidth(i .. ". " .. beforeCursor)
-            love.graphics.print("_", cursorX, y )
+            local beforeCursor = table.concat(lineStr, "", 1, self.cursorPos)
+            local cursorX = 10 + fontBaS:getWidth(prefix .. beforeCursor)
+            love.graphics.print("_", cursorX, y)
         end
     end
 end
@@ -98,10 +120,11 @@ function console:execute()
 
     -- Prepare next line
     self.currentLine = self.currentLine + 1
-    table.insert(self.lines, {content = {}})
+    table.insert(self.lines, {
+        content = {}
+    })
     self.cursorPos = 0
 end
-
 
 function console:splitContent(str)
     local splitWords = {}
@@ -118,8 +141,28 @@ function console:print(str)
         table.insert(contentStr, ch)
     end
     self.currentLine = self.currentLine + 1
-    table.insert(self.lines, {content = contentStr})
+    table.insert(self.lines, {
+        content = contentStr
+    })
     self.cursorPos = #contentStr
+end
+
+function console:isCommand(key)
+    return commands[key] ~= nil
+end
+
+function console:isSubCommand(key)
+    local words = self:splitContent(table.concat(self.lines[self.currentLine].content))
+    local buildCommand = commands
+    local args = {}
+    local index = 1
+
+    while words[index] and buildCommand[words[index]] do
+        buildCommand = buildCommand[words[index]]
+        if index > 1 and key == words[index] then
+        end
+        index = index + 1
+    end
 end
 
 return console

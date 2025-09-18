@@ -37,7 +37,8 @@ fontBaS = love.graphics.newFont("assets/fonts/Barlow-Regular.ttf", 25)
 -- Scenery System
 
 local scenery = SceneryInit(
-    { path = "src.start"; key = "start", default = true}
+    { path = "src.start"; key = "start", default = true},
+    { path = "src.console"; key = "console"}
 )
 
 

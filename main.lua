@@ -20,7 +20,7 @@ la = love.audio
 -- Load sys data
 function reloadData()
     osName = love.system.getOS()
-    renderer, vendor, version = love.graphics.getRendererInfo()
+    renderer, version, vendor = love.graphics.getRendererInfo()
     luaVer = _VERSION
     jitVer = jit and jit.version or "N/A"
     mem = collectgarbage("count")

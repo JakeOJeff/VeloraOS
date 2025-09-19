@@ -88,7 +88,7 @@ function console:draw()
 
         -- Draw cursor (only for current line)
         if i == self.currentLine and self.cursorVisible then
-            local beforeCursor = table.concat(lineStr, "", 1, self.cursorPos - 1)
+            local beforeCursor = table.concat(lineStr, "", 1, self.cursorPos)
             local cursorX = 10 + fontBaS:getWidth(prefix .. beforeCursor)
             love.graphics.print("_", cursorX, y)
         end

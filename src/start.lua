@@ -41,7 +41,7 @@ function start:load()
     self.daemons = { "watchdog", "sync", "power", "gfxd", "audiod", "netd" }
     
     math.randomseed(os.time())
-    for i = 1, 10 do
+    for i = 1, 25 do
         local msg = self.textWall.text[math.random(#self.textWall.text)]
         msg = msg:gsub("%%s", function()
             local pick = ({self.drivers, self.fs, self.daemons})[math.random(3)]
@@ -54,7 +54,7 @@ function start:load()
 
     -- Credits scrolling setup
     self.textWall.scrollY = wH + 50 * scale -- start below screen
-    self.textWall.speed = 75 * scale       -- pixels per second
+    self.textWall.speed = 140 * scale       -- pixels per second
     self.textWall.started = false
 
 
@@ -94,10 +94,11 @@ function start:draw()
     if self.textWall.started then
         for i, line in ipairs(self.textWall.text) do
             local textY = self.textWall.scrollY + (i * fontBaM:getHeight() + 10)
-            if textY == wW/2 then
-                lg.setColor()
+            if textY <= wW/2 then
+                lg.setColor(0, 1, 0)
             end
             lg.printf(line, 0, textY, wW, "center")
+            lg.setColor(1,1,1)
         end
     end
     lg.setColor(0, 1, 0, 0.5)

@@ -157,6 +157,16 @@ end
 function console:goToDirectory(pos)
     local locSplits = self:splitDirectory(pos)
     local dir = directories
+
+    while locSplits ~= nil and dir[locSplits[1]].data do
+        dir = dir[locSplits[1]].data
+        table.remove(locSplits, 1)
+    end
+    if not dir.data then
+        return false
+    end
+
+    return dir
 end
 function console:print(str)
     local contentStr = {'>', '>'} -- prefix characters

@@ -8,6 +8,7 @@ function console:load()
     self.cursorPos = 0
     self.blinkTimer = 0
     self.cursorVisible = true
+    self.currentDirectory = "C:/"
 end
 
 function console:update(dt)
@@ -62,7 +63,7 @@ function console:draw()
 
         -- draw line number prefix
         love.graphics.setColor(1, 1, 1) -- white
-        local prefix = i .. ". "
+        local prefix = "["..self.currentDirectory .. "] "
         love.graphics.print(prefix, 10, y)
         local x = 10 + fontBaS:getWidth(prefix)
 
@@ -72,6 +73,8 @@ function console:draw()
         for wi, word in ipairs(words) do
             if self:isCommand(word) then
                 love.graphics.setColor(0.3, 0.8, 1) -- cyan for recognized commands
+            elseif self:isSubCommand(word) then
+                love.graphics.setColor(0.8, 0.8, 0)
             else
                 love.graphics.setColor(1, 1, 1) -- normal white text
             end
@@ -85,7 +88,7 @@ function console:draw()
 
         -- Draw cursor (only for current line)
         if i == self.currentLine and self.cursorVisible then
-            local beforeCursor = table.concat(lineStr, "", 1, self.cursorPos)
+            local beforeCursor = table.concat(lineStr, "", 1, self.cursorPos - 1)
             local cursorX = 10 + fontBaS:getWidth(prefix .. beforeCursor)
             love.graphics.print("_", cursorX, y)
         end
@@ -152,17 +155,43 @@ function console:isCommand(key)
 end
 
 function console:isSubCommand(key)
-    local words = self:splitContent(table.concat(self.lines[self.currentLine].content))
-    local buildCommand = commands
-    local args = {}
-    local index = 1
+    -- local words = self:splitContent(table.concat(self.lines[self.currentLine].content))
+    -- local buildCommand = commands
+    -- local args = {}
+    -- local index = 1
 
-    while words[index] and buildCommand[words[index]] do
-        buildCommand = buildCommand[words[index]]
-        if index > 1 and key == words[index] then
+    -- while words[index] and buildCommand[words[index]] do
+    --     buildCommand = buildCommand[words[index]]
+
+    --     if key == words[index] then
+
+    --         return true
+    --     end
+    --      if type(buildCommand) == "function" then
+    --         break
+    --     end
+    --     index = index + 1
+    -- end
+
+    local function search(tbl)
+        for k, v in pairs(tbl) do
+            if type(v) == "table" then
+                -- direct match inside a command table
+                if v[key] ~= nil then
+                    if type(v[key]) == "function" then
+                        return true
+                    end
+                end
+                -- recursively check deeper
+                if search(v) then
+                    return true
+                end
+            end
         end
-        index = index + 1
+        return false
     end
+
+    return search(commands)
 end
 
 return console

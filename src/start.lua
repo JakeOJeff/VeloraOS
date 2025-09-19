@@ -41,7 +41,7 @@ function start:load()
     self.daemons = { "watchdog", "sync", "power", "gfxd", "audiod", "netd" }
     
     math.randomseed(os.time())
-    for i = 1, 25 do
+    for i = 1, 10 do
         local msg = self.textWall.text[math.random(#self.textWall.text)]
         msg = msg:gsub("%%s", function()
             local pick = ({self.drivers, self.fs, self.daemons})[math.random(3)]
@@ -61,11 +61,7 @@ function start:load()
     self.timerManager:after(1, function()
         self.screen.tween.started = true
     end)
-    self.timerManager:after(25, function ()
 
-        self.pauseEnabled = true
-        self.textWall.speed = -150 * scale
-    end)
 end
 
 function start:update(dt)
@@ -85,6 +81,9 @@ function start:update(dt)
     if self.textWall.started then
         self.textWall.scrollY = self.textWall.scrollY - self.textWall.speed * dt
     end
+    if self.textWall.scrollY < -1 * #self.textWall.text * fontBaM:getHeight() then
+        start.setScene("console")
+    end
 
 end
 
@@ -95,6 +94,9 @@ function start:draw()
     if self.textWall.started then
         for i, line in ipairs(self.textWall.text) do
             local textY = self.textWall.scrollY + (i * fontBaM:getHeight() + 10)
+            if textY == wW/2 then
+                lg.setColor()
+            end
             lg.printf(line, 0, textY, wW, "center")
         end
     end

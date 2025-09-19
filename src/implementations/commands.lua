@@ -1,9 +1,16 @@
-local commands = {
+local console = require 'src.console'
 
+local commands = {
+    __exec = function(args)
+                local output = table.concat(args, " ")
+
+        if output ~= "" then
+            console:print("Unknown Command ".."'"..output.."'")
+        end
+    end
     
 }
 
-local console = require 'src.console'
 commands["get"] = {
     ["version"] = function()
         return "1.0"

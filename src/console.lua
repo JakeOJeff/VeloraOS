@@ -17,6 +17,7 @@ function console:update(dt)
         self.cursorVisible = not self.cursorVisible
         self.blinkTimer = 0
     end
+    reloadData()
 end
 
 function console:textinput(t)

@@ -2,13 +2,13 @@ local console = require 'src.console'
 
 local commands = {
     __exec = function(args)
-                local output = table.concat(args, " ")
+        local output = table.concat(args, " ")
 
         if output ~= "" then
-            console:print("Unknown Command ".."'"..output.."'")
+            console:print("Unknown Command " .. "'" .. output .. "'")
         end
     end
-    
+
 }
 
 commands["get"] = {
@@ -18,10 +18,48 @@ commands["get"] = {
     ["system"] = {
         ["version"] = function()
             return "1.0.0"
-        end
+        end,
+        ["sysTime"] = function()
+            return sysTime
+        end,
+        ["os"] = function()
+            return osName
+        end,
+        ["cores"] = function()
+            return cores
+        end,
+        ["lua"] = function()
+            return luaVer
+        end,
+        ["luajit"] = function()
+            return jitVer
+        end,
+        ["dpi"] = function()
+            return dpi
+        end,
+        ["memory"] = function()
+            return mem
+        end,
+        ["uptime"] = function()
+            return uptime
+        end,
+        ["joysticks"] = function()
+            return jsCount
+        end,
+        ["graphics"] = {
+            ["renderer"] = function()
+                return renderer
+            end,
+            ["vendor"] = function()
+                return vendor
+            end,
+            ["version"] = function()
+                return version
+            end
+        }
+
     }
 }
-
 
 commands["set"] = {
     ["fullscreen"] = function()
@@ -34,7 +72,7 @@ commands["set"] = {
     end
 }
 
-commands["echo"]= {
+commands["echo"] = {
     __exec = function(args)
         local output = table.concat(args, " ")
         console:print(output)
@@ -68,14 +106,13 @@ end
 
 commands["cat"] = {
     __exec = function(args)
-         local destination = table.concat(args, "")
+        local destination = table.concat(args, "")
         local dir = console:goToDirectory(destination)
         if type(dir) == "string" then
             console:print(dir)
         end
     end
 }
-
 
 commands["cd"] = {
     __exec = function(args)

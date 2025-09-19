@@ -4,9 +4,9 @@ local osInfoImg = lg.newImage("assets/start.png")
 
 function start:load()
     self.timer = 0
-    self.screen = {}
-    self.screen.img = osInfoImg
-
+    self.screen = {
+        img = osInfoImg
+    }
     self.screen.width = self.screen.img:getWidth()
     self.screen.height = self.screen.img:getHeight()
     self.screen.x = wW / 2 - self.screen.width / 2
@@ -14,58 +14,59 @@ function start:load()
     self.screen.tween = {
         started = false,
         src = tween.new(2, self.screen,
-            { width = self.screen.img:getWidth() / 1.5, height = self.screen.img:getHeight() / 1.5, y = 50 * scale })
+            { width = self.screen.img:getWidth() / 1.5,
+              height = self.screen.img:getHeight() / 1.5,
+              y = 50 * scale })
     }
 
     self.timerManager = Timer:new()
 
-
-    self.textWall = {}
-    self.textWall.text = {
-       "Initializing kernel...",
-        "Loading graphics driver v%s...",
-        "Mounting filesystem [%s]...",
-        "Checking memory: %d MB OK",
-        "Connecting to system bus...",
-        "Driver [%s] initialized",
-        "Module [%s]... SUCCESS",
-        "Scanning PCI devices... %d found",
-        "Starting background daemon [%s]",
-        "Authentication services... READY",
-        "System entropy pool seeded",
-        "Launching user interface..."
-    }
-
-    self.drivers = { "TWEEN", "TIMER", "SCENERY", "PHYSICS", "AUDIO", "NET", "INPUT" }
-    self.fs = { "ext4", "fat32", "ntfs", "customfs" }
-    self.daemons = { "watchdog", "sync", "power", "gfxd", "audiod", "netd" }
     
-    math.randomseed(os.time())
-    for i = 1, 25 do
-        local msg = self.textWall.text[math.random(#self.textWall.text)]
-        msg = msg:gsub("%%s", function()
-            local pick = ({self.drivers, self.fs, self.daemons})[math.random(3)]
-            return pick[math.random(#pick)]
-        end)
-        msg = msg:gsub("%%d", tostring(math.random(0, collectgarbage("count"))))
-        table.insert(self.textWall.text, msg)
-    end
-    table.insert(self.textWall.text, "=== SYSTEM LOADED SUCCESSFULLY ===")
 
-    -- Credits scrolling setup
-    self.textWall.scrollY = wH + 50 * scale -- start below screen
-    self.textWall.speed = 140 * scale       -- pixels per second
+    -- Text wall is only REAL info
+    self.textWall = {}
+    self.textWall.text = self:buildSystemInfo()
+
+  
+
+    -- credits scrolling setup
+    self.textWall.scrollY = wH + 50 * scale
+    self.textWall.speed = 100 * scale
     self.textWall.started = false
 
-
+    -- start tween after 1 second
     self.timerManager:after(1, function()
         self.screen.tween.started = true
     end)
-
 end
+function start:buildSystemInfo()
+  
+
+    return {
+        string.format("System Time: %s", sysTime),
+        string.format("Operating System: %s", osName),
+        string.format("CPU Cores: %d", cores),
+        string.format("Lua Version: %s", luaVer),
+        string.format("LuaJIT: %s", jitVer),
+        string.format("Graphics Renderer: %s", renderer),
+        string.format("Graphics Vendor: %s", vendor),
+        string.format("Graphics Version: %s", version),
+        string.format("Window Size: %dx%d (fullscreen=%s)", winW, winH, tostring(flags.fullscreen)),
+        string.format("DPI Scale: %.2f", dpi),
+        string.format("FPS: %d", fps),
+        string.format("Memory (Lua): %d KB", mem),
+        string.format("Mouse Position: %d, %d", mx, my),
+        string.format("Joysticks Connected: %d", jsCount),
+        string.format("Clipboard Length: %d", clipLen),
+        string.format("Uptime: %.2f seconds", uptime),
+        "=== COLLECT REQ DATA ==="
+    }
+end
+
 
 function start:update(dt)
     self.timerManager:update(dt)
+    reloadData()
 
     if self.screen.tween.started then
         self.screen.tween.src:update(dt)
@@ -91,6 +92,7 @@ function start:draw()
     -- Draw scrolling text credits BEHIND gameover screen
     lg.setScissor(0, self.screen.y + self.screen.height + 50 * scale, wW, wH - self.screen.y * scale)
     lg.setFont(fontBaM)
+    self.textWall.text = self:buildSystemInfo()
     if self.textWall.started then
         for i, line in ipairs(self.textWall.text) do
             local textY = self.textWall.scrollY + (i * fontBaM:getHeight() + 10)

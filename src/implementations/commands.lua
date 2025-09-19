@@ -56,16 +56,35 @@ commands["refresh"] = function()
 end
 
 commands["ls"] = function()
-    for i,v in ipairs(console:goToDirectory(console.currentDirectory)) do
-        console:print(i)
+    local dir = console:goToDirectory(console.currentDirectory)
+    if dir then
+        for name, _ in pairs(dir) do
+            console:print(name)
+        end
+    else
+        console:print("Directory not found")
     end
 end
+
+commands["cat"] = {
+    __exec = function(args)
+         local destination = table.concat(args, "")
+        local dir = console:goToDirectory(destination)
+        if type(dir) == "string" then
+            console:print(dir)
+        end
+    end
+}
+
 
 commands["cd"] = {
     __exec = function(args)
         local destination = table.concat(args, "")
-        if console:goToDirectory(destination) then
+        local dir = console:goToDirectory(destination)
+        if dir and type(dir) == "table" then
             console.currentDirectory = destination
+        else
+            console:print("Invalid directory: " .. destination)
         end
     end
 }

@@ -154,21 +154,24 @@ function console:splitDirectory(str)
     end
     return splitWords
 end
-function console:goToDirectory(pos)
-    local locSplits = self:splitDirectory(pos)
+function console:goToDirectory(path)
+    local locSplits = self:splitDirectory(path)
     local dir = directories
 
-    while locSplits ~= nil and dir[locSplits[1]].data do
-        dir = dir[locSplits[1]].data
-        print(locSplits[1])
-        table.remove(locSplits, 1)
-    end
-    if not dir.data then
-        return false
+    for _, part in ipairs(locSplits) do
+        if dir[part] and type(dir[part]) == "table" and dir[part].data then
+            dir = dir[part].data
+        elseif dir[part] and type(dir[part]) ~= "table" then
+            -- It's a file, return the file content
+            return dir[part]
+        else
+            return false
+        end
     end
 
     return dir
 end
+
 function console:print(str)
     local contentStr = {'>', '>'} -- prefix characters
     for i = 1, #str do

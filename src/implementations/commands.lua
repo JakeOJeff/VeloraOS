@@ -56,13 +56,17 @@ commands["refresh"] = function()
 end
 
 commands["ls"] = function()
-    
+    for i,v in ipairs(console:goToDirectory(console.currentDirectory)) do
+        console:print(i)
+    end
 end
 
 commands["cd"] = {
     __exec = function(args)
         local destination = table.concat(args, "")
-        console.currentDirectory = destination
+        if console:goToDirectory(destination) then
+            console.currentDirectory = destination
+        end
     end
 }
 

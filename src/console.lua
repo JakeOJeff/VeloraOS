@@ -160,6 +160,7 @@ function console:goToDirectory(pos)
 
     while locSplits ~= nil and dir[locSplits[1]].data do
         dir = dir[locSplits[1]].data
+        print(locSplits[1])
         table.remove(locSplits, 1)
     end
     if not dir.data then

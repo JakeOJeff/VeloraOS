@@ -11,3 +11,4 @@ directories["C:"] = {
         }
     }
 }
+return directories

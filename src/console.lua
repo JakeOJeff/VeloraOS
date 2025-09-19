@@ -136,7 +136,28 @@ function console:splitContent(str)
     end
     return splitWords
 end
-
+function console:splitDirectory(str)
+    local splitWords = {}
+    -- Match drive letter (e.g., C:)
+    local drive, rest = string.match(str, "^([A-Za-z]:)[/\\]?(.*)")
+    if drive then
+        table.insert(splitWords, drive)
+        -- Split the rest by / or \
+        for part in string.gmatch(rest, "[^/\\]+") do
+            table.insert(splitWords, part)
+        end
+    else
+        -- If no drive letter, just split by / or \
+        for part in string.gmatch(str, "[^/\\]+") do
+            table.insert(splitWords, part)
+        end
+    end
+    return splitWords
+end
+function console:goToDirectory(pos)
+    local locSplits = self:splitDirectory(pos)
+    local dir = directories
+end
 function console:print(str)
     local contentStr = {'>', '>'} -- prefix characters
     for i = 1, #str do

@@ -10,6 +10,7 @@ Timer = require 'src.classes.Timer'
 
 -- commands
 commands = require "src.implementations.commands"
+directories = require "src.implementations.directories"
 
 -- Setting global modules
 lg = love.graphics

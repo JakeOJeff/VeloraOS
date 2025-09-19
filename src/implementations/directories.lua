@@ -2,7 +2,7 @@ local directories = {
 
 }
 
-directories["C:/"] = {
+directories["C:"] = {
     data = {
         ["Users"] = {
             data = {

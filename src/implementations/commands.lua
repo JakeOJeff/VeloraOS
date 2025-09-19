@@ -55,4 +55,15 @@ commands["refresh"] = function()
     love.event.quit("restart")
 end
 
+commands["ls"] = function()
+    
+end
+
+commands["cd"] = {
+    __exec = function(args)
+        local destination = table.concat(args, "")
+        console.currentDirectory = destination
+    end
+}
+
 return commands

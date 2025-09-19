@@ -133,4 +133,13 @@ commands["cd"] = {
     end
 }
 
+commands["mkdir"] = {
+    __exec = function(args)
+        local folderName = args[1]
+        local dir = console:goToDirectory(console.currentDirectory)
+        dir[folderName] = { data = {} }
+
+    end
+}
+
 return commands

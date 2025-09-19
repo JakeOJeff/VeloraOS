@@ -108,8 +108,11 @@ commands["cat"] = {
     __exec = function(args)
         local destination = table.concat(args, "")
         local dir = console:goToDirectory(destination)
+        local inDir = console:goToDirectory(console.currentDirectory.."/"..destination)
         if type(dir) == "string" then
             console:print(dir)
+        elseif type(inDir) == "string" then
+            console:print(inDir)
         end
     end
 }
@@ -118,8 +121,12 @@ commands["cd"] = {
     __exec = function(args)
         local destination = table.concat(args, "")
         local dir = console:goToDirectory(destination)
+        local inDir = console:goToDirectory(console.currentDirectory..destination)
         if dir and type(dir) == "table" then
             console.currentDirectory = destination
+        
+        elseif inDir and type(inDir) then 
+            console.currentDirectory = console.currentDirectory..destination
         else
             console:print("Invalid directory: " .. destination)
         end

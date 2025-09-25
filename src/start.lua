@@ -20,7 +20,6 @@ function start:load()
     }
 
     self.timerManager = Timer:new()
-
     
 
     -- Text wall is only REAL info
@@ -59,7 +58,7 @@ function start:buildSystemInfo()
         string.format("Joysticks Connected: %d", jsCount),
         string.format("Clipboard Length: %d", clipLen),
         string.format("Uptime: %.2f seconds", uptime),
-        "=== COLLECT REQ DATA ==="
+        "=== COLLECT REQUIRED DATA ==="
     }
 end
 
